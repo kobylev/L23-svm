@@ -32,7 +32,7 @@ class TestPhaseTwo(unittest.TestCase):
     def test_recursive_classifier_prediction(self):
         """Test if RecursiveBinaryClassifier predicts correctly on simple data."""
         # Increased iterations and learning rate tuning
-        model = RecursiveBinaryClassifier(n_iters=5000, learning_rate=0.001)
+        model = RecursiveBinaryClassifier(n_iters=10000, learning_rate=0.001)
         model.logger = self.logger
         model.fit(self.X_train, self.y_train)
         
