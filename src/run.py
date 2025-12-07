@@ -72,6 +72,10 @@ def main() -> None:
         lambda_param=best_params['lambda_param'],
         n_iters=best_params['n_iters'],
         decay_rate=best_params['decay_rate'],
+        momentum=0.9, # Explicitly enable momentum
+        kernel='rbf', # Use RBF kernel (RFF approximation)
+        gamma=0.5,
+        n_rff_components=500, # Higher components for better accuracy
         random_state=42 # Ensure reproducibility of the final model
     )
     model3.logger = logger

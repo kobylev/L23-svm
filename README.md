@@ -217,8 +217,8 @@ C:\Ai_Expert\L23-svm\
 | Phase | Implementation | Accuracy | Notes |
 | :--- | :--- | :--- | :--- |
 | **I** | `sklearn.svm.SVC` | **~97.8%** | Linear Kernel, optimal baseline |
-| **II** | `ManualSVM` | **~91.1%** | Standard Gradient Descent |
-| **III** | `ManualSVM (Tuned)` | **~91.1% - 98%** | Optimized Learning Rate & Lambda |
+| **II** | `ManualSVM` | **~91.1%** | Vectorized GD + Momentum |
+| **III** | `ManualSVM (Tuned)` | **~91.1%** | Optimized RBF Kernel & Momentum |
 
 *Note: Results may vary slightly due to random initialization, but Phase III consistently matches or exceeds Phase I performance.*
 
@@ -254,8 +254,8 @@ This laboratory demonstrates:
 ### Manual SVM (`src/manual_svm.py`)
 **Purpose**: Core mathematical solver.
 -   **Key Class**: `ManualSVM`
--   **Logic**: Implements `fit` using a loop over iterations and samples to update weights `w` and bias `b`.
--   **Lines**: ~44 (Highly optimized)
+-   **Logic**: Implements `fit` using **vectorized operations** (Batch Gradient Descent) with **Momentum** for faster convergence. Supports **RBF Kernel** via Random Fourier Features (RFF) approximation.
+-   **Lines**: ~80 (Highly optimized)
 
 ### Phase Two (`src/phase_two.py`)
 **Purpose**: Multi-class handling.
@@ -280,17 +280,14 @@ This laboratory demonstrates:
 
 ### The Manual SVM Algorithm
 
-Our `ManualSVM` implements the following update rule for Gradient Descent:
+Our `ManualSVM` implements **Vectorized Batch Gradient Descent with Momentum**:
 
-For each sample $x_i$ with label $y_i \in \{-1, 1\}$:
-
-*   **Condition**: If $y_i \cdot (w \cdot x_i - b) \geq 1$ (Correctly classified with margin):
-    *   $w = w - \alpha \cdot (2\lambda w)$
-*   **Else** (Misclassified or within margin):
-    *   $w = w - \alpha \cdot (2\lambda w - y_i \cdot x_i)$
-    *   $b = b - \alpha \cdot y_i$
-
-Where $\alpha$ is the learning rate and $\lambda$ is the regularization parameter.
+1.  **Vectorization**: Instead of iterating sample-by-sample, we compute scores and gradients for the entire batch in one go using matrix operations (`np.dot`).
+2.  **Momentum**: We track a velocity vector $v$ for weights and bias to accelerate convergence and reduce oscillation:
+    *   $v_w = \mu \cdot v_w - \alpha \cdot \nabla J(w)$
+    *   $w = w + v_w$
+    (Where $\mu$ is the momentum coefficient, typically 0.9)
+3.  **Kernel Trick (RFF)**: For non-linear separation, we approximate the RBF kernel using Random Fourier Features, mapping input $x$ to a randomized cosine feature space before linear training.
 
 ---
 
@@ -313,8 +310,8 @@ venv\Scripts\python -m unittest discover tests
 ## 🤝 Contributing
 
 Contributions are welcome! Areas for enhancement:
-1.  **Kernel Trick**: Implement non-linear kernels (RBF, Polynomial) manually.
-2.  **Soft Margin**: implement soft margin with slack variables.
+1.  **Soft Margin**: Implement soft margin with slack variables explicitly (currently implicit in Hinge Loss).
+2.  **Polynomial Kernel**: Add support for polynomial feature expansion.
 
 ---
 

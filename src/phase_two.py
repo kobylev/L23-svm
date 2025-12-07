@@ -18,10 +18,32 @@ class RecursiveBinaryClassifier:
     - SVM 1: Class A (0) vs. {Class B (1), Class C (2)}
     - SVM 2: Class B (1) vs. Class C (2)
     """
-    def __init__(self, learning_rate: float = 0.0039, lambda_param: float = 0.0005, n_iters: int = 10000, decay_rate: float = 0.01, random_state: Optional[int] = None) -> None:
+    def __init__(self, learning_rate: float = 0.0039, lambda_param: float = 0.0005, n_iters: int = 10000, 
+                 decay_rate: float = 0.01, momentum: float = 0.9, kernel: str = 'linear', 
+                 gamma: float = 1.0, n_rff_components: int = 100, random_state: Optional[int] = None) -> None:
         # Pass hyperparameters to the underlying SVM models for flexibility
-        self.svm_alpha_beta = ManualSVM(learning_rate, lambda_param, n_iters, decay_rate, random_state=random_state) # SVM for A vs {B,C}
-        self.svm_b_c = ManualSVM(learning_rate, lambda_param, n_iters, decay_rate, random_state=random_state)      # SVM for B vs C
+        self.svm_alpha_beta = ManualSVM(
+            learning_rate=learning_rate, 
+            lambda_param=lambda_param, 
+            n_iters=n_iters, 
+            decay_rate=decay_rate, 
+            momentum=momentum,
+            kernel=kernel,
+            gamma=gamma,
+            n_rff_components=n_rff_components,
+            random_state=random_state
+        )
+        self.svm_b_c = ManualSVM(
+            learning_rate=learning_rate, 
+            lambda_param=lambda_param, 
+            n_iters=n_iters, 
+            decay_rate=decay_rate, 
+            momentum=momentum,
+            kernel=kernel,
+            gamma=gamma,
+            n_rff_components=n_rff_components,
+            random_state=random_state
+        )
         self.logger: Optional[Logger] = None
         self.scaler = StandardScaler()
         self.is_fitted: bool = False
