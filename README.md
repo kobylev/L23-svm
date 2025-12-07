@@ -1,97 +1,295 @@
-# SVM Classification on Iris Dataset
+# SVM Classification Laboratory
 
-This project implements a Support Vector Machine (SVM) classifier for the Iris dataset. It follows the specifications outlined in the `prd.md` file and is divided into two main phases:
+**Lab: Support Vector Machines in Practice**
 
-1.  **Phase I:** A baseline implementation using the `scikit-learn` library.
-2.  **Phase II:** An advanced manual implementation of a linear SVM from scratch, using a recursive binary decomposition strategy to handle the multi-class problem.
+A comprehensive Python-based laboratory system demonstrating the implementation and comparison of Support Vector Machine (SVM) classifiers using both standard libraries and manual implementation from first principles.
 
-## Project Structure
+---
 
-```
-.
-├── logs/
-│   └── execution.log       # Log file for program output
-├── plots/
-│   ├── iris_data_visualization.png
-│   ├── decision_boundary_phase_one.png
-│   └── decision_boundary_phase_two.png
-├── src/
-│   ├── __init__.py
-│   ├── phase_one.py        # Scikit-learn implementation
-│   ├── phase_two.py        # Manual SVM implementation
-│   └── plotting.py         # Plotting utility functions
-├── prd.md                  # Product Requirements Document
-├── README.md               # This file
-├── requirements.txt        # Python dependencies
-└── run.py                  # Main execution script
-```
+## 📋 Table of Contents
 
-## Setup and Execution
+- [Overview](#overview)
+- [Phases](#phases)
+- [Analysis and Conclusions](#analysis-and-conclusions)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Results](#results)
+- [Educational Value](#educational-value)
+- [Module Documentation](#module-documentation)
+- [Technical Implementation](#technical-implementation)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
 
-1.  **Create a virtual environment (recommended):**
+---
+
+## 🎯 Overview
+
+This laboratory explores the fundamental principles of Support Vector Machines (SVM) through two distinct phases:
+
+1.  **Baseline Establishment** - Utilizing `scikit-learn` to set a high-performance benchmark.
+2.  **Manual Implementation** - Building a linear SVM solver from scratch using Gradient Descent and Hinge Loss, and solving a multi-class problem via recursive binary decomposition.
+
+### Key Features
+
+✅ **Educational Focus** - Demonstrates the math behind SVMs (Gradient Descent, Hinge Loss)
+✅ **Clean Architecture** - Modular design with clear separation of concerns
+✅ **Comprehensive Logging** - Detailed tracking of model training and accuracy
+✅ **Visual Analytics** - Professional decision boundary plots
+✅ **Manual Optimization** - Custom implementation of the SVM optimization algorithm
+✅ **Recursive Logic** - "Divide and Conquer" strategy for multi-class classification
+
+---
+
+## 🧪 Phases
+
+### Phase I: Standard Library Implementation
+
+**Objective**: Establish a performance baseline using industry-standard tools.
+
+**What it does**:
+- Loads the Iris dataset
+- Trains an `SVC` model with a linear kernel using `scikit-learn`
+- Evaluates accuracy on a test set
+- **Expected Result**: High accuracy (~97%) and clear decision boundaries
+
+**Output**:
+- `decision_boundary_phase_one.png` - Visualization of the sklearn model's decision regions
+- Logged accuracy metrics
+
+---
+
+### Phase II: Manual Optimization (Advanced)
+
+**Objective**: Demonstrate deep understanding of SVM principles by implementing the solver manually.
+
+**What it does**:
+- Implements a linear SVM class (`ManualSVM`) using Gradient Descent optimization on the Hinge Loss function.
+- Implements a `RecursiveBinaryClassifier` to handle the 3-class Iris problem:
+    - **Split 1**: Separates Class 0 (Setosa) from Classes 1 & 2.
+    - **Split 2**: Separates Class 1 (Versicolor) from Class 2 (Virginica).
+- **Expected Result**: Accuracy comparable to Phase I (>90%) using pure custom logic.
+
+**Output**:
+- `decision_boundary_phase_two.png` - Visualization of the manual model's decision regions
+- Logged accuracy metrics confirming success
+
+---
+
+## 📊 Analysis and Conclusions
+
+### Data Visualization
+
+**Observation**: The Iris dataset contains three classes. Class 0 (Setosa) is linearly separable from the others. Classes 1 (Versicolor) and 2 (Virginica) are closer together, presenting a harder classification challenge.
+
+![Iris Data Visualization](plots/iris_data_visualization.png)
+
+### Phase I: Scikit-Learn Decision Boundary
+
+**Conclusion**: The standard library implementation effectively finds the optimal hyperplane maximizing the margin between classes. It achieves near-perfect separation, serving as an excellent baseline.
+
+![Phase I Decision Boundary](plots/decision_boundary_phase_one.png)
+
+### Phase II: Manual SVM Decision Boundaries
+
+**Conclusion**: Our manual implementation successfully replicates the logic of a multi-class SVM.
+1.  **First Boundary**: The model correctly identifies the "easy" split (Setosa vs. Rest).
+2.  **Second Boundary**: It then effectively splits the remaining difficult pair (Versicolor vs. Virginica).
+The combined result closely mimics the professional tool, proving the validity of our recursive "Divide and Conquer" approach and the correctness of our gradient descent solver.
+
+![Phase II Decision Boundary](plots/decision_boundary_phase_two.png)
+
+---
+
+## 🚀 Installation
+
+### Prerequisites
+
+- Python 3.10 or higher
+- pip package manager
+
+### Setup
+
+1.  **Clone or download the project**:
     ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+    cd C:\Ai_Expert\L23-svm
     ```
 
-2.  **Install dependencies:**
+2.  **Create virtual environment** (recommended):
+    ```bash
+    python -m venv venv
+    venv\Scripts\activate  # Windows
+    # source venv/bin/activate  # Linux/Mac
+    ```
+
+3.  **Install dependencies**:
     ```bash
     pip install -r requirements.txt
     ```
 
-3.  **Run the project:**
+4.  **Verify installation**:
     ```bash
-    python run.py
+    python -m src.run --help
     ```
-    This script will execute both Phase I and Phase II, generate the plots in the `/plots` directory, and save all console output to `logs/execution.log`.
 
-## Results Explained (Simply Put)
+---
 
-Imagine you have a basket of mixed Iris flowers, and you want to sort them into three piles based on their species: **Setosa**, **Versicolor**, and **Virginica**. You can't ask the flowers their names, but you *can* measure their petals.
+## 💻 Usage
 
-This project is like building a robot to do that sorting for you.
+### Run Full Pipeline
 
-### 1. The Data (The Flowers)
-First, we looked at the flowers we already knew. We plotted them on a chart based on their **Petal Length** and **Petal Width**.
+The main script executes both phases, generates plots, and logs results to `logs/execution.log`.
 
-![Iris Data Visualization](plots/iris_data_visualization.png)
+```bash
+python -m src.run
+```
 
-**What are we looking at?**
-*   The **horizontal line (X-axis)** represents the *length* of the flower petal.
-*   The **vertical line (Y-axis)** represents the *width* of the flower petal.
-*   Each **colored dot** is one specific flower we measured.
+### View Logs
 
-**Conclusion:**
-*   **The Blue Dots (Setosa)** are clustered in the bottom-left corner (small length and width). They are far apart from the others, meaning they will be very easy for our robot to identify.
-*   **The Red (Versicolor) and Gray (Virginica) Dots** are bunched up together in the top-right. This tells us the real challenge is figuring out where the Red group ends and the Gray group begins.
+Check the detailed execution logs:
+```bash
+type logs\execution.log  # Windows
+# cat logs/execution.log # Linux/Mac
+```
 
-### 2. Phase I: The "Professional" Robot (Scikit-Learn)
-In Phase I, we used a famous, pre-built tool called `scikit-learn`. Think of this as hiring a master gardener who already knows exactly how to sort flowers.
+---
 
-![Phase I Decision Boundary](plots/decision_boundary_phase_one.png)
+## 📁 Project Structure
 
-**What are we looking at?**
-*   The background has been painted into three zones.
-*   If a flower falls in the **Blue Zone**, the robot calls it "Setosa".
-*   If it falls in the **Red Zone**, the robot calls it "Versicolor".
-*   The straight lines where the colors meet are the "Decision Boundaries" – the strict rules the robot follows.
+```
+C:\Ai_Expert\L23-svm\
+├── src/
+│   ├── __init__.py
+│   ├── phase_one.py        # Scikit-learn implementation
+│   ├── phase_two.py        # Recursive multi-class logic
+│   ├── manual_svm.py       # Core Manual SVM solver (Gradient Descent)
+│   ├── plotting.py         # Visualization utilities
+│   └── run.py              # Main entry point
+├── tests/
+│   ├── __init__.py
+│   ├── test_phase_one.py   # Tests for Phase I
+│   ├── test_phase_two.py   # Tests for Phase II
+│   └── test_manual_svm.py  # Tests for Manual SVM logic
+├── logs/                   # Execution logs
+├── plots/                  # Generated images
+├── requirements.txt        # Python dependencies
+├── prd.md                  # Product Requirements Document
+└── README.md               # This file
+```
 
-**Conclusion:**
-*   The robot drew a perfect line separating the Blue flowers.
-*   Crucially, it found an optimal line between the Red and Gray flowers that separates them with very few mistakes. This shows the power of standard algorithms to handle the "messy" parts of data.
+---
 
-### 3. Phase II: The "Handmade" Robot (Manual Code)
-In Phase II, we didn't use the pre-built tool. We built our own sorting logic from scratch using math. We used a strategy called **"Divide and Conquer"**.
+## 📊 Results
 
-**Step A:** The robot asks, "Is it small (Setosa)?" -> *Draws the first line.*
-**Step B:** If it's not small, it asks, "Is it medium (Versicolor) or large (Virginica)?" -> *Draws the second line.*
+### Performance Metrics
 
-![Phase II Decision Boundary](plots/decision_boundary_phase_two.png)
+| Phase | Implementation | Accuracy | Notes |
+| :--- | :--- | :--- | :--- |
+| **I** | `sklearn.svm.SVC` | **~97.8%** | Linear Kernel, optimal baseline |
+| **II** | `ManualSVM` | **~95.6%** | Gradient Descent, Recursive Strategy |
 
-**What are we looking at?**
-*   This map looks very similar to Phase I, which is good!
-*   It shows the result of our two-step logic combined into one final map.
+*Note: Results may vary slightly due to random initialization, but Phase II consistently matches Phase I performance.*
 
-**Conclusion:**
-*   Our handmade robot achieved **~95.6% accuracy**, which is almost as good as the professional tool (**~97.8%**).
-*   **The Big Lesson:** We proved that you don't always need a "black box" super-computer. By breaking a complex problem (3 flower types) into two simple "Yes or No" questions, we built a highly effective classifier from scratch.
+---
+
+## 🎓 Educational Value
+
+### Learning Objectives
+
+This laboratory demonstrates:
+
+1.  **Mathematical Optimization**: Implementing Gradient Descent manually to minimize Hinge Loss.
+2.  **Algorithm Design**: Understanding how to break down a multi-class problem into smaller binary classification problems (Recursive Decomposition).
+3.  **Benchmarking**: The importance of comparing custom implementations against established standards.
+4.  **Data Scaling**: The critical role of `StandardScaler` in SVM convergence (addressed and fixed during development).
+
+### Key Concepts
+
+-   **Hinge Loss**: The loss function used for SVMs ($max(0, 1 - y_i \cdot (w \cdot x_i - b))$).
+-   **Regularization**: The trade-off between margin size and classification error (controlled by $\lambda$).
+-   **Decision Boundary**: The hyperplane that separates data classes.
+
+---
+
+## 🧰 Module Documentation
+
+### Phase One (`src/phase_one.py`)
+**Purpose**: Baseline implementation.
+-   **Key Function**: `run_phase_one(...)`
+-   **Lines**: ~32 (Concise usage of library)
+
+### Manual SVM (`src/manual_svm.py`)
+**Purpose**: Core mathematical solver.
+-   **Key Class**: `ManualSVM`
+-   **Logic**: Implements `fit` using a loop over iterations and samples to update weights `w` and bias `b`.
+-   **Lines**: ~44 (Highly optimized)
+
+### Phase Two (`src/phase_two.py`)
+**Purpose**: Multi-class handling.
+-   **Key Class**: `RecursiveBinaryClassifier`
+-   **Logic**: Orchestrates two `ManualSVM` instances to solve the 3-class problem.
+-   **Lines**: ~108 (Clean recursive structure)
+
+### Plotting (`src/plotting.py`)
+**Purpose**: Visualization.
+-   **Functions**: `plot_iris_data`, `plot_decision_boundary`
+-   **Lines**: ~44
+
+---
+
+## 🔬 Technical Implementation
+
+### The Manual SVM Algorithm
+
+Our `ManualSVM` implements the following update rule for Gradient Descent:
+
+For each sample $x_i$ with label $y_i \in \{-1, 1\}$:
+
+*   **Condition**: If $y_i \cdot (w \cdot x_i - b) \geq 1$ (Correctly classified with margin):
+    *   $w = w - \alpha \cdot (2\lambda w)$
+*   **Else** (Misclassified or within margin):
+    *   $w = w - \alpha \cdot (2\lambda w - y_i \cdot x_i)$
+    *   $b = b - \alpha \cdot y_i$
+
+Where $\alpha$ is the learning rate and $\lambda$ is the regularization parameter.
+
+---
+
+## 🧪 Testing
+
+The project includes a comprehensive test suite using `unittest`.
+
+**Run all tests:**
+```bash
+venv\Scripts\python -m unittest discover tests
+```
+
+**Test Coverage:**
+*   `test_phase_one.py`: Verifies sklearn wrapper.
+*   `test_manual_svm.py`: Verifies the core gradient descent logic on simple binary data.
+*   `test_phase_two.py`: Verifies the recursive logic and scaling fix on 3-class data.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Areas for enhancement:
+1.  **Kernel Trick**: Implement non-linear kernels (RBF, Polynomial) manually.
+2.  **Soft Margin**: implement soft margin with slack variables.
+
+---
+
+## 📝 License
+
+© Koby Lev - All Rights Reserved
+
+This is an educational project for the AI Expert Program - Lesson 23.
+
+---
+
+## 🙏 Acknowledgments
+
+-   **Course**: AI Expert Program
+-   **Topic**: Support Vector Machines (SVM)
+-   **Date**: December 2025
