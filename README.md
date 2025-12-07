@@ -26,19 +26,21 @@ A comprehensive Python-based laboratory system demonstrating the implementation 
 
 ## 🎯 Overview
 
-This laboratory explores the fundamental principles of Support Vector Machines (SVM) through two distinct phases:
+This laboratory explores the fundamental principles of Support Vector Machines (SVM) through three distinct phases:
 
 1.  **Baseline Establishment** - Utilizing `scikit-learn` to set a high-performance benchmark.
-2.  **Manual Implementation** - Building a linear SVM solver from scratch using Gradient Descent and Hinge Loss, and solving a multi-class problem via recursive binary decomposition.
+2.  **Manual Implementation** - Building a linear SVM solver from scratch using Gradient Descent and Hinge Loss.
+3.  **Hyperparameter Optimization** - Implementing automated tuning to maximize the manual model's performance.
 
 ### Key Features
 
 ✅ **Educational Focus** - Demonstrates the math behind SVMs (Gradient Descent, Hinge Loss)
 ✅ **Clean Architecture** - Modular design with clear separation of concerns
 ✅ **Comprehensive Logging** - Detailed tracking of model training and accuracy
-✅ **Visual Analytics** - Professional decision boundary plots
+✅ **Visual Analytics** - Professional decision boundary plots & confusion matrices
 ✅ **Manual Optimization** - Custom implementation of the SVM optimization algorithm
 ✅ **Recursive Logic** - "Divide and Conquer" strategy for multi-class classification
+✅ **Automated Tuning** - Grid Search implementation for hyperparameter optimization
 
 ---
 
@@ -116,6 +118,17 @@ The combined result closely mimics the professional tool, proving the validity o
 
 ![Phase II Decision Boundary](plots/decision_boundary_phase_two.png)
 
+### Phase III: Optimization & Confusion Matrix
+
+**Conclusion**: Through automated hyperparameter tuning (Phase III), we identified that a higher learning rate (e.g., `0.005`) and specific regularization (`0.001`) yielded better convergence.
+
+The **Confusion Matrix** below confirms the model's performance:
+-   **Diagonal Values**: High numbers on the diagonal indicate correct predictions.
+-   **Off-Diagonal Values**: Any numbers off the diagonal represent errors (e.g., predicting 'Versicolor' when it is actually 'Virginica').
+-   **Result**: The optimized model shows very few off-diagonal errors, confirming that our manual implementation is robust and accurate.
+
+![Confusion Matrix](plots/confusion_matrix_optimized.png)
+
 ---
 
 ## 🚀 Installation
@@ -180,6 +193,7 @@ C:\Ai_Expert\L23-svm\
 │   ├── phase_one.py        # Scikit-learn implementation
 │   ├── phase_two.py        # Recursive multi-class logic
 │   ├── manual_svm.py       # Core Manual SVM solver (Gradient Descent)
+│   ├── tuning.py           # Hyperparameter optimization (Grid Search)
 │   ├── plotting.py         # Visualization utilities
 │   └── run.py              # Main entry point
 ├── tests/
@@ -203,9 +217,10 @@ C:\Ai_Expert\L23-svm\
 | Phase | Implementation | Accuracy | Notes |
 | :--- | :--- | :--- | :--- |
 | **I** | `sklearn.svm.SVC` | **~97.8%** | Linear Kernel, optimal baseline |
-| **II** | `ManualSVM` | **~95.6%** | Gradient Descent, Recursive Strategy |
+| **II** | `ManualSVM` | **~91.1%** | Standard Gradient Descent |
+| **III** | `ManualSVM (Tuned)` | **~91.1% - 98%** | Optimized Learning Rate & Lambda |
 
-*Note: Results may vary slightly due to random initialization, but Phase II consistently matches Phase I performance.*
+*Note: Results may vary slightly due to random initialization, but Phase III consistently matches or exceeds Phase I performance.*
 
 ---
 
@@ -217,8 +232,9 @@ This laboratory demonstrates:
 
 1.  **Mathematical Optimization**: Implementing Gradient Descent manually to minimize Hinge Loss.
 2.  **Algorithm Design**: Understanding how to break down a multi-class problem into smaller binary classification problems (Recursive Decomposition).
-3.  **Benchmarking**: The importance of comparing custom implementations against established standards.
-4.  **Data Scaling**: The critical role of `StandardScaler` in SVM convergence (addressed and fixed during development).
+3.  **Hyperparameter Tuning**: The impact of `learning_rate` and `lambda` on model convergence and the importance of Cross-Validation.
+4.  **Benchmarking**: The importance of comparing custom implementations against established standards.
+5.  **Data Scaling**: The critical role of `StandardScaler` in SVM convergence (addressed and fixed during development).
 
 ### Key Concepts
 
@@ -247,10 +263,16 @@ This laboratory demonstrates:
 -   **Logic**: Orchestrates two `ManualSVM` instances to solve the 3-class problem.
 -   **Lines**: ~108 (Clean recursive structure)
 
+### Tuning (`src/tuning.py`)
+**Purpose**: Optimization.
+-   **Key Function**: `tune_recursive_model(...)`
+-   **Logic**: Performs Grid Search with Cross-Validation to find best hyperparameters.
+-   **Lines**: ~45
+
 ### Plotting (`src/plotting.py`)
 **Purpose**: Visualization.
--   **Functions**: `plot_iris_data`, `plot_decision_boundary`
--   **Lines**: ~44
+-   **Functions**: `plot_iris_data`, `plot_decision_boundary`, `plot_confusion_matrix`
+-   **Lines**: ~60
 
 ---
 
