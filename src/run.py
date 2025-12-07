@@ -14,10 +14,13 @@ from sklearn import datasets
 from sklearn.model_selection import train_test_split
 
 from src.phase_one import run_phase_one
-from src.phase_two import run_phase_two
-from src.plotting import plot_iris_data, plot_decision_boundary
+from src.phase_two import run_phase_two, RecursiveBinaryClassifier
+from src.tuning import tune_recursive_model
+from src.plotting import plot_iris_data, plot_decision_boundary, plot_confusion_matrix
+from sklearn.metrics import accuracy_score
+import numpy as np
 
-def main():
+def main() -> None:
     """Main function to run the project."""
     # --- 1. Setup Logging and Directories ---
     os.makedirs("logs", exist_ok=True)
@@ -57,6 +60,31 @@ def main():
     plot_decision_boundary(X_test, y_test, model2,
                            "Phase II: Manual SVM Decision Boundaries",
                            save_path="plots/decision_boundary_phase_two.png")
+
+    # --- 6. Run Phase III (Bonus) ---
+    best_params = tune_recursive_model(X_train, y_train, logger)
+    
+    # Train final optimized model
+    model3 = RecursiveBinaryClassifier(
+        learning_rate=best_params['learning_rate'],
+        lambda_param=best_params['lambda_param'],
+        n_iters=2000 # Increased iterations for final optimized run
+    )
+    model3.logger = logger
+    model3.fit(X_train, y_train)
+    
+    y_pred_opt = model3.predict(X_test)
+    acc_opt = accuracy_score(y_test, y_pred_opt)
+    
+    logger.info(f"Phase III Optimized Accuracy: {acc_opt:.4f}")
+    
+    plot_decision_boundary(X_test, y_test, model3,
+                           "Phase III: Optimized Manual SVM",
+                           save_path="plots/decision_boundary_phase_three_optimized.png")
+    
+    plot_confusion_matrix(y_test, y_pred_opt, 
+                          "Confusion Matrix - Optimized Manual SVM",
+                          save_path="plots/confusion_matrix_optimized.png")
 
 if __name__ == '__main__':
     main()

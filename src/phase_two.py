@@ -6,6 +6,8 @@ the solver manually and handling multi-class classification via recursive
 binary decomposition, as outlined in the PRD.
 """
 import numpy as np
+from logging import Logger
+from typing import Optional
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from src.manual_svm import ManualSVM
@@ -16,16 +18,19 @@ class RecursiveBinaryClassifier:
     - SVM 1: Class A (0) vs. {Class B (1), Class C (2)}
     - SVM 2: Class B (1) vs. Class C (2)
     """
-    def __init__(self, learning_rate=0.001, lambda_param=0.01, n_iters=1000):
+    def __init__(self, learning_rate: float = 0.001, lambda_param: float = 0.01, n_iters: int = 1000) -> None:
         # Pass hyperparameters to the underlying SVM models for flexibility
         self.svm_alpha_beta = ManualSVM(learning_rate, lambda_param, n_iters) # SVM for A vs {B,C}
         self.svm_b_c = ManualSVM(learning_rate, lambda_param, n_iters)      # SVM for B vs C
-        self.logger = None
+        self.logger: Optional[Logger] = None
         self.scaler = StandardScaler()
-        self.is_fitted = False
+        self.is_fitted: bool = False
 
-    def fit(self, X, y):
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """Trains the two SVMs based on the recursive split strategy."""
+        if self.logger is None:
+             raise ValueError("Logger must be assigned before fitting.")
+
         # --- Train SVM 1 (Split 1: Global Classification) ---
         # Group α: Class A (Iris-Setosa, label 0) -> mapped to +1
         # Group β: Class B+C (Versicolor, Virginica, labels 1, 2) -> mapped to -1
@@ -49,7 +54,7 @@ class RecursiveBinaryClassifier:
         self.logger.info("Trained SVM Model 2 (Class B vs. C)")
         self.is_fitted = True
 
-    def predict(self, X):
+    def predict(self, X: np.ndarray) -> np.ndarray:
         """Vectorized prediction for efficiency."""
         if not self.is_fitted:
             raise RuntimeError("Classifier has not been fitted yet.")
@@ -74,7 +79,7 @@ class RecursiveBinaryClassifier:
             
         return final_predictions
 
-    def predict_on_mesh(self, X):
+    def predict_on_mesh(self, X: np.ndarray) -> np.ndarray:
         """A version of predict optimized for meshgrid inputs for plotting."""
         # Use SVM Model 1 to check for Group α (Class A)
         pred_alpha_beta = self.svm_alpha_beta.predict(X)
@@ -93,7 +98,7 @@ class RecursiveBinaryClassifier:
             
         return final_preds
 
-def run_phase_two(X_train, y_train, X_test, y_test, logger):
+def run_phase_two(X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray, y_test: np.ndarray, logger: Logger) -> RecursiveBinaryClassifier:
     """
     Executes the manual SVM implementation and recursive classification.
     

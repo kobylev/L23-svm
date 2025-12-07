@@ -4,10 +4,12 @@ Phase I: Standard Library Implementation
 Objective: Establish a performance baseline using industry-standard tools.
 As per the PRD for the Support Vector Machine (SVM) Classification Assignment.
 """
+import numpy as np
+from logging import Logger
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
-def run_phase_one(X_train, y_train, X_test, y_test, logger):
+def run_phase_one(X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray, y_test: np.ndarray, logger: Logger) -> SVC:
     """
     Implements the standard library SVM classification for the Iris dataset.
     

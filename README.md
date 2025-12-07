@@ -77,6 +77,22 @@ This laboratory explores the fundamental principles of Support Vector Machines (
 
 ---
 
+### Phase III: Bonus - Hyperparameter Tuning
+
+**Objective**: Maximize the performance of the Manual SVM using automated optimization techniques.
+
+**What it does**:
+- Implements a **Grid Search** algorithm in `src/tuning.py`.
+- Iterates through combinations of `learning_rate` (e.g., 0.001, 0.01) and regularization `lambda_param`.
+- Uses **Cross-Validation** to select the optimal parameters.
+- Re-trains the model with the best parameters found.
+
+**Output**:
+- `decision_boundary_phase_three_optimized.png` - Plot of the optimized model.
+- `confusion_matrix_optimized.png` - A visual breakdown of correct vs. incorrect predictions for each class.
+
+---
+
 ## 📊 Analysis and Conclusions
 
 ### Data Visualization

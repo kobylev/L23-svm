@@ -5,18 +5,19 @@ Objective: A helper module containing the manual implementation of a
 linear Support Vector Machine using Gradient Descent.
 """
 import numpy as np
+from typing import Optional
 
 class ManualSVM:
     """A manual implementation of a linear Support Vector Machine using Gradient Descent."""
 
-    def __init__(self, learning_rate=0.001, lambda_param=0.01, n_iters=1000):
-        self.lr = learning_rate
-        self.lambda_param = lambda_param
-        self.n_iters = n_iters
-        self.w = None
-        self.b = None
+    def __init__(self, learning_rate: float = 0.001, lambda_param: float = 0.01, n_iters: int = 1000) -> None:
+        self.lr: float = learning_rate
+        self.lambda_param: float = lambda_param
+        self.n_iters: int = n_iters
+        self.w: Optional[np.ndarray] = None
+        self.b: Optional[float] = None
 
-    def fit(self, X, y):
+    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
         Train the SVM by finding the optimal weights (w) and bias (b)
         using gradient descent on the Hinge Loss function.
@@ -45,7 +46,9 @@ class ManualSVM:
                 self.w -= self.lr * dw
                 self.b -= self.lr * db
 
-    def predict(self, X):
+    def predict(self, X: np.ndarray) -> np.ndarray:
         """Predict the class label for a given input."""
+        if self.w is None or self.b is None:
+             raise RuntimeError("Model has not been fitted yet.")
         approx = np.dot(X, self.w) - self.b
         return np.sign(approx)

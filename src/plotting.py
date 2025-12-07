@@ -4,8 +4,9 @@ Utility functions for creating and saving plots for the SVM assignment.
 """
 import numpy as np
 import matplotlib.pyplot as plt
+from typing import Optional, Any
 
-def plot_iris_data(X, y, save_path=None):
+def plot_iris_data(X: np.ndarray, y: np.ndarray, save_path: Optional[str] = None) -> None:
     """Plots the Iris dataset features (petal length vs width)."""
     plt.figure(figsize=(10, 6))
     scatter = plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.coolwarm, edgecolors='k')
@@ -19,7 +20,7 @@ def plot_iris_data(X, y, save_path=None):
         print(f"Saved data visualization to {save_path}")
     plt.close()
 
-def plot_decision_boundary(X, y, model, title, save_path=None):
+def plot_decision_boundary(X: np.ndarray, y: np.ndarray, model: Any, title: str, save_path: Optional[str] = None) -> None:
     """
     Plots the decision boundary of a trained classifier along with the test data.
     """
@@ -48,4 +49,23 @@ def plot_decision_boundary(X, y, model, title, save_path=None):
     if save_path:
         plt.savefig(save_path)
         print(f"Saved decision boundary plot to {save_path}")
+    plt.close()
+
+def plot_confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, title: str, save_path: Optional[str] = None) -> None:
+    """Plots the confusion matrix for the given predictions."""
+    from sklearn.metrics import confusion_matrix
+    import seaborn as sns
+
+    cm = confusion_matrix(y_true, y_pred)
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+                xticklabels=['Setosa', 'Versicolor', 'Virginica'],
+                yticklabels=['Setosa', 'Versicolor', 'Virginica'])
+    plt.ylabel('Actual')
+    plt.xlabel('Predicted')
+    plt.title(title)
+    
+    if save_path:
+        plt.savefig(save_path)
+        print(f"Saved confusion matrix to {save_path}")
     plt.close()
