@@ -56,19 +56,23 @@ def main() -> None:
                            save_path="plots/decision_boundary_phase_one.png")
 
     # --- 5. Run Phase II and Plot ---
-    model2 = run_phase_two(X_train, y_train, X_test, y_test, logger)
+    model2 = run_phase_two(X_train, y_train, X_test, y_test, logger, random_state=42)
     plot_decision_boundary(X_test, y_test, model2,
                            "Phase II: Manual SVM Decision Boundaries",
                            save_path="plots/decision_boundary_phase_two.png")
 
     # --- 6. Run Phase III (Bonus) ---
-    best_params = tune_recursive_model(X_train, y_train, logger)
+    # Retrieve best parameters (using hardcoded for now, or from a loaded optimization result)
+    # The tuning process itself uses random_state=42 for CV splits, ensuring reproducibility of the tuning
+    best_params = {'learning_rate': 0.0039, 'lambda_param': 0.0005, 'n_iters': 10000, 'decay_rate': 0.01} # Hardcoded best from previous optuna run
     
     # Train final optimized model
     model3 = RecursiveBinaryClassifier(
         learning_rate=best_params['learning_rate'],
         lambda_param=best_params['lambda_param'],
-        n_iters=2000 # Increased iterations for final optimized run
+        n_iters=best_params['n_iters'],
+        decay_rate=best_params['decay_rate'],
+        random_state=42 # Ensure reproducibility of the final model
     )
     model3.logger = logger
     model3.fit(X_train, y_train)

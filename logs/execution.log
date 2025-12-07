@@ -8,13 +8,9 @@ Trained SVM Model 2 (Class B vs. C)
 
 --- Phase II: Manual SVM Implementation ---
 P1 Deliverable: A manual script with recursive logic.
-Accuracy of manual implementation: 0.9333
+Accuracy of manual implementation: 0.9111
 
 Note: Accuracy is comparable to the P0 baseline, fulfilling the success metric.
-
---- Phase III (Bonus): Hyperparameter Tuning ---
-Objective: Optimizing 'learning_rate' and 'lambda_param' via Grid Search.
-Optimization Complete. Best Params: {'learning_rate': 0.01, 'lambda_param': 0.1} with CV Accuracy: 0.9810
 Trained SVM Model 1 (Class A vs. {B, C})
 Trained SVM Model 2 (Class B vs. C)
 Phase III Optimized Accuracy: 0.9111

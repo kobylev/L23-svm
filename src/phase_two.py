@@ -18,10 +18,10 @@ class RecursiveBinaryClassifier:
     - SVM 1: Class A (0) vs. {Class B (1), Class C (2)}
     - SVM 2: Class B (1) vs. Class C (2)
     """
-    def __init__(self, learning_rate: float = 0.001, lambda_param: float = 0.01, n_iters: int = 1000) -> None:
+    def __init__(self, learning_rate: float = 0.0039, lambda_param: float = 0.0005, n_iters: int = 10000, decay_rate: float = 0.01, random_state: Optional[int] = None) -> None:
         # Pass hyperparameters to the underlying SVM models for flexibility
-        self.svm_alpha_beta = ManualSVM(learning_rate, lambda_param, n_iters) # SVM for A vs {B,C}
-        self.svm_b_c = ManualSVM(learning_rate, lambda_param, n_iters)      # SVM for B vs C
+        self.svm_alpha_beta = ManualSVM(learning_rate, lambda_param, n_iters, decay_rate, random_state=random_state) # SVM for A vs {B,C}
+        self.svm_b_c = ManualSVM(learning_rate, lambda_param, n_iters, decay_rate, random_state=random_state)      # SVM for B vs C
         self.logger: Optional[Logger] = None
         self.scaler = StandardScaler()
         self.is_fitted: bool = False
@@ -98,7 +98,7 @@ class RecursiveBinaryClassifier:
             
         return final_preds
 
-def run_phase_two(X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray, y_test: np.ndarray, logger: Logger) -> RecursiveBinaryClassifier:
+def run_phase_two(X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray, y_test: np.ndarray, logger: Logger, random_state: Optional[int] = None) -> RecursiveBinaryClassifier:
     """
     Executes the manual SVM implementation and recursive classification.
     
@@ -108,11 +108,12 @@ def run_phase_two(X_train: np.ndarray, y_train: np.ndarray, X_test: np.ndarray, 
         X_test (np.array): Testing feature data.
         y_test (np.array): Testing target labels.
         logger: Logger object for output.
+        random_state: Optional seed for reproducibility.
         
     Returns:
         RecursiveBinaryClassifier: The trained manual classifier.
     """
-    manual_classifier = RecursiveBinaryClassifier()
+    manual_classifier = RecursiveBinaryClassifier(random_state=random_state)
     manual_classifier.logger = logger # Pass logger to the class
     manual_classifier.fit(X_train, y_train)
 

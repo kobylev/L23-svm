@@ -10,11 +10,12 @@ from typing import Optional
 class ManualSVM:
     """A manual implementation of a linear Support Vector Machine using Gradient Descent."""
 
-    def __init__(self, learning_rate: float = 0.001, lambda_param: float = 0.01, n_iters: int = 1000, decay_rate: float = 0.01) -> None:
+    def __init__(self, learning_rate: float = 0.001, lambda_param: float = 0.01, n_iters: int = 1000, decay_rate: float = 0.01, random_state: Optional[int] = None) -> None:
         self.lr: float = learning_rate
         self.lambda_param: float = lambda_param
         self.n_iters: int = n_iters
         self.decay_rate: float = decay_rate
+        self.random_state: Optional[int] = random_state # Store random_state
         self.w: Optional[np.ndarray] = None
         self.b: Optional[float] = None
 
@@ -28,8 +29,10 @@ class ManualSVM:
         y_ = np.where(y <= 0, -1, 1)
 
         # Initialize weights and bias
-        self.w = np.zeros(n_features)
-        self.b = 0.0 # Ensure bias is a float for consistency
+        if self.random_state is not None:
+            np.random.seed(self.random_state) # Seed for reproducibility
+        self.w = np.random.randn(n_features) * 0.01 # Initialize with small random values
+        self.b = 0.0 # Bias initialized to zero
         
         prev_loss = float('inf')
         
